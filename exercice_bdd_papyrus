@@ -1,0 +1,180 @@
+-- Cas papyrus, Ex 1 
+
+USE papyrus;
+
+SELECT *
+FROM fournis
+JOIN vente ON vente.numfou = fournis.numfou
+WHERE fournis.numfou = 9120;
+
+
+
+
+-- Cas papyrus, Ex 2
+
+USE papyrus;
+
+SELECT fournis.numfou
+FROM fournis
+JOIN entcom ON entcom.numfou = fournis.numfou;
+
+
+
+-- Cas papyrus, Ex 3
+
+USE papyrus;
+
+SELECT COUNT(numcom) AS 'NB commandes', COUNT(nomfou) AS 'Nb fournisseurs'
+FROM entcom
+JOIN fournis ON fournis.numfou = entcom.numfou;
+
+
+-- Cas papyrus, Ex 4
+
+USE papyrus;
+
+SELECT *
+FROM produit
+WHERE stkphy <= stkale AND qteann < 1000 ;
+
+
+-- Papyrus, Ex 5
+
+USE papyrus;
+
+SELECT *
+FROM fournis
+WHERE posfou REGEXP '^75|77|78|92'
+ORDER BY posfou;
+
+
+-- Papyrus, Ex 6
+
+USE papyrus;
+
+SELECT *
+FROM entcom
+WHERE MONTH(datcom) = 3|| MONTH(datcom) = 4;
+
+
+-- Papyrus, Ex 7
+
+USE papyrus;
+
+SELECT *
+FROM entcom
+WHERE obscom != NULL || obscom != '';
+
+
+-- Papyrus, Ex 8
+
+USE papyrus;
+
+SELECT *
+FROM ligcom
+ORDER BY qtecde DESC;
+
+
+-- Papyrus, Ex 9
+
+USE papyrus;
+
+SELECT *
+FROM ligcom
+WHERE qtecde*priuni > 10000
+AND qtecde < 1000
+GROUP BY codart;
+
+
+-- Papyrus, Ex 10
+
+USE papyrus;
+
+SELECT nomfou, ligcom.numcom, codart, datcom
+FROM ligcom
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+ORDER BY nomfou;
+
+
+-- Papyrus, Ex 11
+
+USE papyrus;
+
+SELECT ligcom.numcom, nomfou, libart, SUM(qtecde*priuni) AS 'Sous_tot', obscom
+FROM ligcom
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+JOIN produit ON produit.codart = ligcom.codart
+
+WHERE obscom LIKE '%urgent%'
+
+GROUP BY nomfou;
+
+
+-- Papyrus, Ex 12
+
+-- 1ière méthode
+
+USE papyrus;
+
+SELECT nomfou
+FROM ligcom
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+JOIN produit ON produit.codart = ligcom.codart
+JOIN vente ON vente.numfou = fournis.numfou
+WHERE delliv > 0;
+
+-- 2ième méthode
+
+USE papyrus;
+
+SELECT nomfou
+FROM vente
+JOIN produit ON produit.codart = vente.codart
+JOIN fournis ON vente.numfou = fournis.numfou
+WHERE delliv REGEXP '[1-9]';
+
+-- Papyrus, Ex 13
+
+-- 1ière methode
+
+USE papyrus;
+
+SELECT numcom, datcom
+FROM fournis
+JOIN entcom ON entcom.numfou = fournis.numfou
+WHERE numcom = 70210;
+
+-- 2ième methode
+
+USE papyrus;
+
+SELECT numcom, datcom
+FROM fournis
+JOIN entcom ON entcom.numfou = fournis.numfou
+WHERE numcom REGEXP '^70210';
+
+-- Papyrus, Ex 14
+
+-- Je comprend l'exercice mais je ne trouve pas d'article "ruban" ou démarrant par un quelconque R
+
+
+-- Papyrus, Ex 15
+
+-- Agregation du SUM, je trouve pas ce qu'il faut faire.
+
+USE papyrus;
+
+SELECT fournis.numfou, nomfou, qtecde, stkale, stkphy
+FROM ligcom
+JOIN produit ON produit.codart = ligcom.codart
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou;
+
+-- Papyrus, Ex 16 à 19
+
+-- Même problème que l'ex 15
+
+

@@ -1,0 +1,180 @@
+-- Cas hotel, Lot 1, Ex. 1 
+
+USE hotel;
+
+SELECT hot_nom, hot_ville
+FROM hotel;
+
+-- Cas hotel, Lot 1, Ex. 2
+
+USE hotel;
+
+SELECT cli_nom, cli_prenom, cli_adresse
+FROM client;
+
+
+-- Cas hotel, Lot 1, Ex. 3
+
+USE hotel;
+
+SELECT *
+FROM station
+WHERE sta_altitude <= 1000
+ORDER BY sta_altitude DESC;
+
+
+-- Cas hotel, Lot 1, Ex. 4
+
+USE hotel;
+
+SELECT *
+FROM chambre
+WHERE cha_capacite > 1
+ORDER BY cha_numero;
+
+
+-- Cas hotel, Lot 1, Ex. 5
+
+USE hotel;
+
+SELECT *
+FROM client
+WHERE cli_ville <> 'Londre';
+
+
+-- Cas hotel, Lot 1, Ex. 6
+
+USE hotel;
+
+SELECT *
+FROM hotel
+WHERE hot_ville = 'Bretou' AND hot_categorie > 3;
+
+
+-- Cas hotel, Lot 2, Ex. 7
+
+USE hotel;
+
+SELECT sta_nom, hot_nom, hot_categorie, hot_ville
+FROM hotel
+INNER JOIN station
+ON hotel.hot_sta_id = station.sta_id;
+
+
+-- Cas hotel, Lot 2, Ex. 8
+
+USE hotel;
+
+SELECT hot_nom, hot_categorie, hot_ville, cha_numero
+FROM hotel
+INNER JOIN chambre
+ON hotel.hot_id = chambre.cha_id;
+
+
+-- Cas hotel, Lot 2, Ex. 9
+
+USE hotel;
+
+SELECT hot_nom, hot_categorie, hot_ville, cha_numero, cha_capacite
+FROM hotel
+INNER JOIN chambre
+ON hotel.hot_id = chambre.cha_id
+WHERE cha_capacite > 1 AND hot_ville = 'Bretou';
+
+
+-- Cas hotel, Lot 2, Ex. 10
+
+USE hotel;
+
+SELECT cli_nom, cli_prenom, hot_nom, res_date
+FROM reservation
+JOIN client ON reservation.res_id = client.cli_id
+JOIN chambre ON reservation.res_id = chambre.cha_id
+JOIN hotel ON chambre.cha_id = hotel.hot_id;
+
+
+-- Cas hotel, Lot 2, Ex. 11
+
+USE hotel;
+
+SELECT sta_nom, hot_nom, cha_numero, cha_capacite
+FROM chambre
+JOIN hotel ON hotel.hot_id = chambre.cha_hot_id
+JOIN station ON station.sta_id = hotel.hot_sta_id;
+
+
+-- Cas hotel, Lot 2, Ex. 12
+
+USE hotel;
+
+SELECT cli_nom, hot_nom, res_date_debut, DATEDIFF(res_date_fin, res_date_debut) AS 'Durée du séjour (en jours)'
+FROM client
+JOIN reservation ON reservation.res_id = client.cli_id
+JOIN chambre ON chambre.cha_id = reservation.res_cha_id
+JOIN hotel ON hotel.hot_id = chambre.cha_hot_id;
+
+
+
+-- Cas hotel, Lot 3, Ex. 13
+
+USE hotel;
+
+SELECT sta_id, sta_nom, COUNT(hot_id) AS 'Nb hotel'
+FROM station
+JOIN hotel ON hotel.hot_sta_id = station.sta_id
+GROUP BY sta_nom;
+
+
+-- Cas hotel, Lot 3, Ex. 14
+
+USE hotel;
+
+SELECT sta_id, sta_nom, COUNT(cha_id) AS 'Nb chambres'
+FROM station
+JOIN hotel ON hotel.hot_sta_id = station.sta_id
+JOIN chambre ON chambre.cha_hot_id = hotel.hot_id
+GROUP BY sta_nom;
+
+
+-- Cas hotel, Lot 3, Ex. 15
+
+USE hotel;
+
+SELECT sta_id, sta_nom, COUNT(cha_id) AS 'Nb Chambres'
+FROM station
+JOIN hotel ON hotel.hot_sta_id = station.sta_id
+JOIN chambre ON chambre.cha_hot_id = hotel.hot_id
+WHERE cha_capacite > 1
+GROUP BY sta_nom;
+
+
+-- Cas hotel, Lot 3, Ex. 16
+
+USE hotel;
+
+SELECT hot_id, hot_nom, cli_nom
+FROM hotel
+JOIN chambre ON chambre.cha_hot_id = hotel.hot_id
+JOIN reservation ON reservation.res_cha_id = chambre.cha_id
+JOIN client ON cli_id = reservation.res_cli_id
+WHERE cli_nom = 'Squire';
+
+
+-- Cas hotel, Lot 3, Ex. 17
+
+-- Ne fonctionne pas, revenir plus tard
+
+
+USE hotel;
+
+SELECT sta_id, sta_nom, AVG(calcul.res_duree)
+
+FROM station, (
+	SELECT DATEDIFF(res_date_fin, res_date_debut) AS 'res_duree'
+	FROM reservation
+	) AS 'calcul'	
+	
+JOIN hotel ON hotel.hot_sta_id = station.sta_id
+JOIN chambre ON chambre.cha_hot_id = hotel.hot_id
+
+GROUP BY sta_nom;

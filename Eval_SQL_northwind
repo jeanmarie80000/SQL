@@ -1,0 +1,51 @@
+-- Northwind, Ex 1
+
+Clients français
+Société, contact, fonction, tel
+
+
+-- Northwind, Ex 2
+
+Produits vendus par Exotic Liquids
+Produits, prix
+
+-- Northwind, Ex 3
+
+Produits des fournisseurs français
+Fournisseurs, Nb Produits
+Tri descroissant
+
+-- Northwind, Ex 4
+
+Liste clients français avec + de 10 commandes
+Clients, nb commandes
+
+-- Northwind, Ex 5
+
+Liste clients avec un montant de commandes > à 30K
+Clients, CA, Pays
+
+-- Northwind, Ex 6
+
+Liste pays dont les produits de Exotic Liquids ont été livrés
+Pays
+
+-- Northwind, Ex 7
+
+CA global sur les ventes 1997
+! dans une même vente, un produit peut être vendu plusieurs fois !
+Il faut donc préparer avant le sous-total de chaque produit, 
+qui tient compte de son prix unitaire et de la quantité vendue...
+
+-- Northwind, Ex 8
+
+CA détaillé par mois sur les ventes 1997
+! dans une même vente, un produit peut être vendu plusieurs fois !
+Il faut donc préparer avant le sous-total de chaque produit, 
+qui tient compte de son prix unitaire et de la quantité vendue...
+Date dernière commande
+
+
+-- Northwind, Ex 10
+
+Delai moyen de livraison (en jours)
