@@ -1,51 +1,102 @@
 -- Northwind, Ex 1
 
-Clients français
-Société, contact, fonction, tel
+USE northwind;
+
+SELECT CompanyName, ContactName, ContactTitle, Phone
+FROM customers
+WHERE Country = 'France';
 
 
 -- Northwind, Ex 2
 
-Produits vendus par Exotic Liquids
-Produits, prix
+USE northwind;
+
+SELECT ProductName, UnitPrice
+FROM products
+JOIN suppliers ON suppliers.SupplierID = products.supplierID
+WHERE CompanyName = 'Exotic Liquids';
+
 
 -- Northwind, Ex 3
 
-Produits des fournisseurs français
-Fournisseurs, Nb Produits
-Tri descroissant
+USE northwind;
+
+SELECT CompanyName, UnitsInStock
+FROM products
+JOIN suppliers ON suppliers.SupplierID = products.SupplierID
+ORDER BY UnitsInStock ASC;
+
 
 -- Northwind, Ex 4
 
-Liste clients français avec + de 10 commandes
-Clients, nb commandes
+USE northwind;
+
+SELECT CompanyName, Quantity
+FROM customers
+JOIN orders ON orders.CustomerID = customers.CustomerID
+JOIN northwind.`order details` ON northwind.`order details`.OrderID = orders.OrderID
+WHERE Country = 'France'
+AND Quantity > 10;
+
 
 -- Northwind, Ex 5
 
-Liste clients avec un montant de commandes > à 30K
-Clients, CA, Pays
+USE northwind;
+
+SELECT CompanyName, Country, Sum(Quantity*UnitPrice) AS 'CA'
+FROM customers
+JOIN orders ON orders.CustomerID = customers.CustomerID
+JOIN northwind.`order details` ON northwind.`order details`.OrderID = orders.OrderID
+GROUP BY CompanyName
+HAVING SUM(Quantity*UnitPrice) > 30000;
+
 
 -- Northwind, Ex 6
 
-Liste pays dont les produits de Exotic Liquids ont été livrés
-Pays
+USE northwind;
+
+SELECT ShipCountry
+FROM suppliers
+JOIN products ON products.SupplierID = suppliers.SupplierID
+JOIN northwind.`order details` ON northwind.`order details`.ProductID = products.ProductID
+JOIN orders ON orders.OrderID = northwind.`order details`.OrderID
+WHERE CompanyName = 'Exotic Liquids'
+GROUP BY ShipCountry;
+
 
 -- Northwind, Ex 7
 
-CA global sur les ventes 1997
-! dans une même vente, un produit peut être vendu plusieurs fois !
-Il faut donc préparer avant le sous-total de chaque produit, 
-qui tient compte de son prix unitaire et de la quantité vendue...
+USE northwind;
+
+SELECT SUM(UnitPrice*Quantity) AS 'Montant Ventes 97'
+FROM orders
+JOIN northwind.`order details` ON northwind.`order details`.OrderID = orders.OrderID;
+
 
 -- Northwind, Ex 8
 
-CA détaillé par mois sur les ventes 1997
-! dans une même vente, un produit peut être vendu plusieurs fois !
-Il faut donc préparer avant le sous-total de chaque produit, 
-qui tient compte de son prix unitaire et de la quantité vendue...
-Date dernière commande
+SELECT MONTH(ShippedDate) AS 'Mois 1997', SUM(UnitPrice*Quantity) AS 'Montant Ventes'
+FROM orders
+JOIN northwind.`order details` ON northwind.`order details`.OrderID = orders.OrderID
+WHERE YEAR(ShippedDate) = 1997
+GROUP BY MONTH(ShippedDate);
+
+
+-- Northwind, Ex 9
+
+USE northwind;
+
+SELECT CompanyName, OrderDate
+From customers
+JOIN orders ON orders.CustomerID = customers.CustomerID
+WHERE CompanyName = 'Du monde entier'
+ORDER BY YEAR(OrderDate) DESC
+LIMIT 1;
 
 
 -- Northwind, Ex 10
 
-Delai moyen de livraison (en jours)
+USE northwind;
+
+SELECT Round(AVG(DATEDIFF(ShippedDate, OrderDate))) AS 'Moy_Livraison'
+FROM orders;

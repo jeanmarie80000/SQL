@@ -158,23 +158,73 @@ WHERE numcom REGEXP '^70210';
 
 -- Papyrus, Ex 14
 
--- Je comprend l'exercice mais je ne trouve pas d'article "ruban" ou démarrant par un quelconque R
+USE papyrus;
 
+SELECT *
+FROM vente
+JOIN produit ON produit.codart = vente.codart
+WHERE prix1 < (
+	SELECT prix1
+	FROM vente
+	WHERE codart = 'R080'
+	);
 
 -- Papyrus, Ex 15
 
--- Agregation du SUM, je trouve pas ce qu'il faut faire.
-
 USE papyrus;
 
-SELECT fournis.numfou, nomfou, qtecde, stkale, stkphy
+SELECT fournis.numfou, nomfou, libart, qtecde, stkale, stkphy
 FROM ligcom
 JOIN produit ON produit.codart = ligcom.codart
 JOIN entcom ON entcom.numcom = ligcom.numcom
-JOIN fournis ON fournis.numfou = entcom.numfou;
+JOIN fournis ON fournis.numfou = entcom.numfou
+WHERE stkphy <= stkale*1.5
+ORDER BY libart ASC, nomfou ASC;
 
--- Papyrus, Ex 16 à 19
+-- Papyrus, Ex 16 
 
--- Même problème que l'ex 15
+USE papyrus;
+
+SELECT fournis.numfou, nomfou, libart, qtecde, stkale, stkphy, delliv
+FROM ligcom
+JOIN produit ON produit.codart = ligcom.codart
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+JOIN vente ON vente.codart = produit.codart
+WHERE stkphy <= stkale*1.5
+AND delliv <= 30;
 
 
+-- Papyrus, Ex 17
+
+USE papyrus;
+
+SELECT fournis.numfou, nomfou, libart, qtecde, stkale, stkphy, delliv
+FROM ligcom
+JOIN produit ON produit.codart = ligcom.codart
+JOIN entcom ON entcom.numcom = ligcom.numcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+JOIN vente ON vente.codart = produit.codart
+WHERE stkphy <= stkale*1.5
+AND delliv <= 30
+ORDER BY stkphy DESC;
+
+-- Papyrus, Ex 18
+
+USE papyrus;
+
+SELECT libart, qtecde, qteann
+FROM ligcom
+JOIN produit ON produit.codart = ligcom.codart
+WHERE qtecde*0.90 >= qteann;
+
+
+-- Papyrus, Ex 19
+
+USE papyrus;
+
+SELECT fournis.numfou, fournis.nomfou, SUM((qtecde*priuni)*1.20) AS 'CA_2018_TTC'
+FROM entcom
+JOIN fournis ON fournis.numfou = entcom.numfou
+JOIN ligcom ON ligcom.numcom = entcom.numcom
+WHERE YEAR(derliv) = 2018;
